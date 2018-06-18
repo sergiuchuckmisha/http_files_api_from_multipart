@@ -1,6 +1,8 @@
 
 /**idea of module is to provide ability to read/write files in tmp directory in project folder*/
 
+const TEMPORARY_FOLDER_PATH: &str = "tmp/";
+
 use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
@@ -41,7 +43,7 @@ https://doc.rust-lang.org/beta/rust-by-example/std_misc/file/create.html
 */
 pub fn write_to_file(file_name: String, file_content: String) -> Result<()> {
 //    let path = Path::new("tmp/qwerty.txt");
-    let file_name_2 = &("tmp/".to_owned() + &file_name);//todo get rid of extra variable
+    let file_name_2 = &(TEMPORARY_FOLDER_PATH.to_owned() + &file_name);//todo get rid of extra variable
 //    let path = Path::new(&("tmp/".to_owned() + &file_name));
     let path = Path::new(file_name_2);
 //    let display = path.display();
