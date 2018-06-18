@@ -8,7 +8,7 @@ pub const TEMPORARY_FOLDER_PATH: &str = "./tmp/";
 
 //slash in the end is required
 //used in tests to store client files
-pub const CLIENT_TEMPORARY_FOLDER_PATH: &str = "./tmp_client/";
+pub const CLIENT_TEMPORARY_FOLDER_PATH: &str = "tmp_client/";
 
 //slash in the end is required
 //used in tests to store server files

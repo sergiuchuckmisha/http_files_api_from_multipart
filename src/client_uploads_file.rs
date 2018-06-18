@@ -81,6 +81,6 @@ mod tests {
     #[test]
     fn test_upload_data_as_file()
     {
-        upload_data_as_file("file_name.txt", "file_content3");//todo understand why '.txt' extension is mandatory for test to pass
+        upload_data_as_file("qqqq.txt", "file_content7");//todo understand why '.txt' extension is mandatory for test to pass
     }
 }

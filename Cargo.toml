@@ -19,3 +19,7 @@ required-features = ["hyper"]
 [[example]]
 name = "hyper_server"
 required-features = ["hyper"]
+
+[[example]]
+name = "files_io"
+required-features = ["hyper"]
