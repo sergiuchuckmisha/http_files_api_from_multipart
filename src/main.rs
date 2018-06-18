@@ -20,7 +20,8 @@ mod tests {
 
     #[test]
     fn test_write() {
-        write_to_file();
+//        write_to_file();
+        write_to_file("qwerty.txt".to_string(), "qwerty".to_string());//todo get rid of to_string()
     }
 
 }
