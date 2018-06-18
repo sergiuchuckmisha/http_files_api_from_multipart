@@ -1,6 +1,6 @@
 mod files_io_api;
 
-use files_io_api::read_from_file;
+use files_io_api::*;
 
 fn main() {
     println!("Hello, world!");
@@ -9,13 +9,18 @@ fn main() {
 #[cfg(test)]
 mod tests {
 
-    use super::read_from_file;
+    use super::*;
 
     #[test]
     fn test_read() {
         println!("qwerty");
-        println!("{:?}", super::read_from_file("LICENSE".to_string()).unwrap());
+        println!("{:?}", read_from_file("LICENSE".to_string()).unwrap());
         println!("qwerty");
+    }
+
+    #[test]
+    fn test_write() {
+        write_to_file();
     }
 
 }

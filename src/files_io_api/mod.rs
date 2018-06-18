@@ -34,3 +34,25 @@ pub fn read_from_file(file_name: String) -> Result<String> {
 
     // `file` goes out of scope, and the "hello.txt" file gets closed
 }
+
+pub fn write_to_file() {
+    let path = Path::new("tmp/qwerty.txt");
+    let display = path.display();
+
+    // Open a file in write-only mode, returns `io::Result<File>`
+    let mut file = match File::create(&path) {
+        Err(why) => panic!("couldn't create {}: {}",
+                           display,
+                           why.description()),
+        Ok(file) => file,
+    };
+
+    // Write the `LOREM_IPSUM` string to `file`, returns `io::Result<()>`
+    match file.write_all("qwerty".as_bytes()) {
+        Err(why) => {
+            panic!("couldn't write to {}: {}", display,
+                   why.description())
+        },
+        Ok(_) => println!("successfully wrote to {}", display),
+    }
+}
