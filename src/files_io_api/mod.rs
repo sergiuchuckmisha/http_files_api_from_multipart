@@ -3,7 +3,6 @@
 
 const TEMPORARY_FOLDER_PATH: &str = "tmp/";
 
-use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
@@ -13,11 +12,13 @@ use std::io::Result;
 use code from
 https://doc.rust-lang.org/beta/rust-by-example/std_misc/file/open.html
 */
-pub fn read_from_file(file_name: String) -> Result<String> {
+pub fn read_from_file(file_name: &str) -> Result<String> {
     // Create a path to the desired file
 //    let path = Path::new("lorem_ipsum.txt");
     let file_name_2 = &(TEMPORARY_FOLDER_PATH.to_owned() + &file_name);//todo get rid of extra variable
     let path = Path::new(&file_name_2);
+
+//    let display = path.display();
 
     // Open the path in read-only mode, returns `io::Result<File>`
     let mut file: File = match File::open(&path) {
@@ -41,7 +42,7 @@ pub fn read_from_file(file_name: String) -> Result<String> {
 use code
 https://doc.rust-lang.org/beta/rust-by-example/std_misc/file/create.html
 */
-pub fn write_to_file(file_name: String, file_content: String) -> Result<()> {
+pub fn write_to_file(file_name: &str, file_content: &str) -> Result<()> {
 //    let path = Path::new("tmp/qwerty.txt");
     let file_name_2 = &(TEMPORARY_FOLDER_PATH.to_owned() + &file_name);//todo get rid of extra variable
 //    let path = Path::new(&("tmp/".to_owned() + &file_name));
@@ -67,19 +68,19 @@ mod tests {
 
     #[test]
     fn test_write() {
-        write_to_file("qwerty.txt".to_string(), "qwerty".to_string());//todo get rid of to_string()
+        write_to_file("qwerty.txt", "qwerty");
     }
 
 
     #[test]
     fn test_read() {
-        write_to_file("qwerty.txt".to_string(), "qwerty".to_string());
-        assert_eq!("qwerty", read_from_file("qwerty.txt".to_string()).unwrap());
+        write_to_file("qwerty.txt", "qwerty");
+        assert_eq!("qwerty", read_from_file("qwerty.txt").unwrap());
     }
 
     #[test]
     #[should_panic]
     fn test_read_negative() {
-        assert_eq!("qwerty", read_from_file("qwerty2.txt".to_string()).unwrap());
+        assert_eq!("qwerty", read_from_file("qwerty2.txt").unwrap());
     }
 }
