@@ -26,21 +26,17 @@ use config::CLIENT_TEMPORARY_FOLDER_PATH;
 use files_io_api::visit_dirs::visit_dirs;
 
 
-fn save_content_to_file<P: AsRef<Path>, B: AsRef<[u8]>>(file_name: P, file_content: B) -> Result<()>
-{
-    write_to_file(file_name, file_content, CLIENT_TEMPORARY_FOLDER_PATH)
-}
-
 /**function creates file*/
 pub fn upload_data_as_file<P: AsRef<Path>, B: AsRef<[u8]>>(file_name: P, file_content: B) -> Result<()>
     where P: Copy
 {
-    save_content_to_file(file_name, file_content);
+    write_to_file(file_name, file_content);
     upload_file(file_name)
 }
 
 pub fn upload_file<P: AsRef<Path>>(file_path: P) -> Result<()>
 {
+    println!("upload_file called with param {:?}", file_path.as_ref());
 //    let url = "http://localhost:3333".parse()
     let url = format!("{}{}", "http://localhost:", PORT).parse()
         .expect("Failed to parse URL");
@@ -52,7 +48,7 @@ pub fn upload_file<P: AsRef<Path>>(file_path: P) -> Result<()>
         .expect("Failed to create Multipart");
 
 //    write_body(&mut multipart, &format!("{}{}", CLIENT_TEMPORARY_FOLDER_PATH, file_path))
-    write_body(&mut multipart, &(CLIENT_TEMPORARY_FOLDER_PATH.to_string() + &file_path.as_ref().as_os_str().to_os_string().into_string().unwrap()))
+    write_body(&mut multipart, file_path)
         .expect("Failed to write multipart body");
 
     let mut response = multipart.send().expect("Failed to send multipart request");
@@ -68,6 +64,8 @@ pub fn upload_file<P: AsRef<Path>>(file_path: P) -> Result<()>
 }
 
 pub fn write_body<P: AsRef<Path>>(multi: &mut Multipart<Request<Streaming>>, file_path: P) -> hyper::Result<()> {
+    println!("write_body called with param {:?}", file_path.as_ref());
+
     let mut binary = "Hello world from binary!".as_bytes();
 
 //    multi.write_text("text", "Hello, world!")?;
@@ -86,14 +84,14 @@ mod tests {
     fn test_prepare_data()
     {
         init(CLIENT_TEMPORARY_FOLDER_PATH);
-        save_content_to_file("file_name", "file_content");
+        write_to_file(make_path_from_file_name_and_directory_path("file_name", CLIENT_TEMPORARY_FOLDER_PATH), "file_content");
     }
 
     #[test]
     fn test_upload_data_as_file()
     {
-//        upload_data_as_file("qqqq.txt", "file_content7");//todo understand why '.txt' extension is mandatory for test to pass
-        upload_data_as_file("hyper_server.exe", "file_content7");//todo understand why '.txt' extension is mandatory for test to pass
+        upload_data_as_file("qqqq.txt", "file_content7");//todo understand why '.txt' extension is mandatory for test to pass
+//        upload_data_as_file("hyper_server.exe", "file_content7");//todo understand why '.txt' extension is mandatory for test to pass
     }
 
     /**idea of the test is to find all files in certain dir and upload them to the server*/
@@ -104,8 +102,8 @@ mod tests {
         //https://doc.rust-lang.org/std/fs/fn.read_dir.html
 
         visit_dirs(CLIENT_TEMPORARY_FOLDER_PATH, &|ref entry| {
-//            upload_file(entry.path());
-            println!("{:?}", entry.path())
+            println!("{:?}", entry.path());
+            upload_file(entry.path());
         });
     }
 }

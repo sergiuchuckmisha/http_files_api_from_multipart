@@ -6,6 +6,7 @@ use config::TEMPORARY_FOLDER_PATH;
 use std::fs::{File, remove_dir_all, create_dir_all};
 use std::io::prelude::*;
 use std::path::Path;
+use std::path::PathBuf;
 use std::io::Result;
 
 pub mod visit_dirs;
@@ -42,18 +43,23 @@ pub fn read_from_file<P1: AsRef<Path>, P2: AsRef<Path>>(file_path: P1, folder_pa
     // `file` goes out of scope, and the "hello.txt" file gets closed
 }
 
+pub fn make_path_from_file_name_and_directory_path<P1: AsRef<Path>, P2: AsRef<Path>>(file_name: P1, folder_path: P2) -> PathBuf {
+    let mut pathBuf = PathBuf::new();
+    pathBuf.push(folder_path);
+    pathBuf.push(file_name);
+    pathBuf
+//    &Path::new(&(folder_path.as_ref().as_os_str().to_os_string().into_string().unwrap() + &file_name.as_ref().as_os_str().to_os_string().into_string().unwrap()))
+}
+
 /**
 use code
 https://doc.rust-lang.org/beta/rust-by-example/std_misc/file/create.html
 */
-pub fn write_to_file<P1: AsRef<Path>, P2: AsRef<Path>, B: AsRef<[u8]>>(file_name: P1, file_content: B, folder_path: P2) -> Result<()>
+//pub fn write_to_file<P1: AsRef<Path>, P2: AsRef<Path>, B: AsRef<[u8]>>(file_name: P1, file_content: B, folder_path: P2) -> Result<()>
+pub fn write_to_file<P: AsRef<Path>, B: AsRef<[u8]>>(file_path: P, file_content: B) -> Result<()>
 {
-    // use code https://users.rust-lang.org/t/what-is-right-ways-to-concat-strings/3780/2
-    let file_name_2 = folder_path.as_ref().as_os_str().to_os_string().into_string().unwrap() + &file_name.as_ref().as_os_str().to_os_string().into_string().unwrap();//todo get rid of extra variable
-    let path = Path::new(&file_name_2);
-
     // Open a file in write-only mode, returns `io::Result<File>`
-    let mut file = match File::create(&path) {
+    let mut file = match File::create(&file_path) {
         Err(why) => return Err(why),
         Ok(file) => file,
     };
@@ -88,14 +94,14 @@ mod tests {
 
     #[test]
     fn test_write() {
-        write_to_file("qwerty.txt", "qwerty", TEMPORARY_FOLDER_PATH);
+        write_to_file(make_path_from_file_name_and_directory_path("qwerty.txt", TEMPORARY_FOLDER_PATH), "qwerty");
     }
 
 
     #[test]
     fn test_read() {
         init(TEMPORARY_FOLDER_PATH);
-        write_to_file("qwerty.txt", "qwerty", TEMPORARY_FOLDER_PATH);
+        write_to_file(make_path_from_file_name_and_directory_path("qwerty.txt", TEMPORARY_FOLDER_PATH), "qwerty");
         assert_eq!("qwerty", read_from_file("qwerty.txt", TEMPORARY_FOLDER_PATH).unwrap());
     }
 
