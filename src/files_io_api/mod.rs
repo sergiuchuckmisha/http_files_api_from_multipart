@@ -8,6 +8,8 @@ use std::io::prelude::*;
 use std::path::Path;
 use std::io::Result;
 
+pub mod visit_dirs;
+
 /**
 use code from
 https://doc.rust-lang.org/beta/rust-by-example/std_misc/file/open.html
