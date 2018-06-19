@@ -46,7 +46,7 @@ pub fn read_from_file<P1: AsRef<Path>, P2: AsRef<Path>>(file_path: P1, folder_pa
 use code
 https://doc.rust-lang.org/beta/rust-by-example/std_misc/file/create.html
 */
-pub fn write_to_file<P1: AsRef<Path>, P2: AsRef<Path>>(file_name: P1, file_content: &str, folder_path: P2) -> Result<()>
+pub fn write_to_file<P1: AsRef<Path>, P2: AsRef<Path>, B: AsRef<[u8]>>(file_name: P1, file_content: B, folder_path: P2) -> Result<()>
 {
     // use code https://users.rust-lang.org/t/what-is-right-ways-to-concat-strings/3780/2
     let file_name_2 = folder_path.as_ref().as_os_str().to_os_string().into_string().unwrap() + &file_name.as_ref().as_os_str().to_os_string().into_string().unwrap();//todo get rid of extra variable
@@ -59,7 +59,7 @@ pub fn write_to_file<P1: AsRef<Path>, P2: AsRef<Path>>(file_name: P1, file_conte
     };
 
     // Write the `LOREM_IPSUM` string to `file`, returns `io::Result<()>`
-    match file.write_all(file_content.as_bytes()) {
+    match file.write_all(file_content.as_ref()) {
         Err(why) => return Err(why),
         Ok(_) => Ok(()),
     }
