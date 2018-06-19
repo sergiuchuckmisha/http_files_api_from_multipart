@@ -26,13 +26,13 @@ use config::CLIENT_TEMPORARY_FOLDER_PATH;
 use files_io_api::visit_dirs::visit_dirs;
 
 
-fn save_content_to_file<P: AsRef<Path>>(file_name: P, file_content: &str) -> Result<()>
+fn save_content_to_file<P: AsRef<Path>, B: AsRef<[u8]>>(file_name: P, file_content: B) -> Result<()>
 {
     write_to_file(file_name, file_content, CLIENT_TEMPORARY_FOLDER_PATH)
 }
 
 /**function creates file*/
-pub fn upload_data_as_file<P: AsRef<Path>>(file_name: P, file_content: &str) -> Result<()>
+pub fn upload_data_as_file<P: AsRef<Path>, B: AsRef<[u8]>>(file_name: P, file_content: B) -> Result<()>
     where P: Copy
 {
     save_content_to_file(file_name, file_content);
