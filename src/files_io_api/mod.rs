@@ -7,6 +7,7 @@ use std::fs::{File, remove_dir_all, create_dir_all};
 use std::io::prelude::*;
 use std::path::Path;
 use std::io::Result;
+use std::fmt::Display;
 
 pub mod visit_dirs;
 
@@ -14,10 +15,12 @@ pub mod visit_dirs;
 use code from
 https://doc.rust-lang.org/beta/rust-by-example/std_misc/file/open.html
 */
-pub fn read_from_file(file_name: &str, folder_path: &str) -> Result<String> {
+pub fn read_from_file<P: AsRef<Path>>(file_path: P, folder_path: &str) -> Result<String>
+    where P: Display
+{
     // Create a path to the desired file
 //    let path = Path::new("lorem_ipsum.txt");
-    let file_name_2 = format!("{}{}", folder_path, file_name);//todo get rid of extra variable
+    let file_name_2 = format!("{}{}", folder_path, file_path);//todo get rid of extra variable
     let path = Path::new(&file_name_2);
 
 //    let display = path.display();
@@ -44,7 +47,9 @@ pub fn read_from_file(file_name: &str, folder_path: &str) -> Result<String> {
 removes tmp folder and recreates it
 todo for some reason sometimes remove and create overlaps and folder is not created. Investigate?
 */
-pub fn init(folder_path: &str) -> Result<()>  {
+pub fn init<P: AsRef<Path>>(folder_path: P) -> Result<()>
+    where P: Copy
+{
     remove_dir_all(folder_path)?;
     create_dir_all(folder_path)?;
     Ok(())
@@ -54,9 +59,11 @@ pub fn init(folder_path: &str) -> Result<()>  {
 use code
 https://doc.rust-lang.org/beta/rust-by-example/std_misc/file/create.html
 */
-pub fn write_to_file(file_name: &str, file_content: &str, folder_path: &str) -> Result<()> {
+pub fn write_to_file<P: AsRef<Path>>(file_path: P, file_content: &str, folder_path: &str) -> Result<()>
+    where P: Display
+{
     // use code https://users.rust-lang.org/t/what-is-right-ways-to-concat-strings/3780/2
-    let file_name_2 = format!("{}{}", folder_path, file_name);//todo get rid of extra variable
+    let file_name_2 = format!("{}{}", folder_path, file_path);//todo get rid of extra variable
     let path = Path::new(&file_name_2);
 
     // Open a file in write-only mode, returns `io::Result<File>`
